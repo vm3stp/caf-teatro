@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café-Teatro</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #5a2a2a, #6f4f28); /* Degradado rojo vino a café */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .container, .form-container {
+            background-color: black;
+            padding: 40px;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+        }
+        h2 {
+            font-size: 2rem;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #6f4f28;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5a2a2a;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .list-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container" class="container">
+        <h1>Bienvenido al Café-Teatro</h1>
+        <button onclick="showForm()">Continuar</button>
+    </div>
+
+    <div id="form-container" class="form-container" style="display: none;">
+        <h2>Confirmar Asistencia</h2>
+        <form id="formulario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido" required>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="list" id="listado">
+            <!-- Lista de registros aparecerá aquí -->
+        </div>
+    </div>
+
+    <script>
+        function showForm() {
+            document.getElementById('main-container').style.display = 'none';
+            document.getElementById('form-container').style.display = 'block';
+            cargarRegistros();
+        }
+
+        function cargarRegistros() {
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const listado = document.getElementById('listado');
+            listado.innerHTML = registros.map(reg => `<div class="list-item">${reg.nombre} ${reg.apellido}</div>`).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('formulario');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const apellido = document.getElementById('apellido').value;
+                
+                if (nombre && apellido) {
+                    const registros = JSON.parse(localStorage.getItem('registros')) || [];
+                    registros.push({ nombre, apellido });
+                    localStorage.setItem('registros', JSON.stringify(registros));
+                    form.reset();
+                    cargarRegistros();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
